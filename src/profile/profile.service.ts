@@ -1,7 +1,10 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { ChangePasswordDto, UpdateProfileDto } from './dto';
-import { UserRepository } from './repository';
+import path from 'path';
 import bcrypt from 'bcrypt';
+import { Filesystem } from '../common/utils';
+import { UserRepository } from './repository';
+import { UploadDirs } from '../common/constant';
+import { ChangePasswordDto, UpdateProfileDto } from './dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class ProfileService {
@@ -30,5 +33,45 @@ export class ProfileService {
       userId,
       ...input,
     });
+  }
+
+  async uploadAvatar(userId: string, filename: string) {
+    await this.userRepo.addToAvatar({ userId, filename });
+  }
+
+  async deleteAvatar(userId: string, filename: string) {
+    const account = await this.userRepo.findById(userId);
+
+    // check file exists in disk
+    if (!account.avatars.includes(filename)) {
+      throw new BadRequestException('avatar is not exists');
+    }
+
+    const avatarPather = path.join(
+      process.env.UPLOAD_DIR,
+      UploadDirs.Avatar,
+      filename,
+    );
+
+    // update database
+    await this.userRepo.dropFromAvatar({ userId, filename });
+
+    // delete file from filesystem
+    Filesystem.deleteIfExists(avatarPather);
+  }
+
+  async downloadAvatar(filename: string) {
+    const avatarPather = path.join(
+      process.env.UPLOAD_DIR,
+      UploadDirs.Avatar,
+      filename,
+    );
+
+    // check file exists in disk
+    if (!Filesystem.exists(avatarPather)) {
+      throw new BadRequestException('avatar is not exists');
+    }
+
+    return Filesystem.openReadStream(avatarPather);
   }
 }

@@ -1,4 +1,5 @@
 import { BaseUserRepository } from '../../common/repository';
+import { ArrayOverlap } from 'typeorm';
 
 interface IUpdateOne {
   userId: string;
@@ -8,6 +9,14 @@ interface IUpdateOne {
   bio?: string;
   password?: string;
 }
+
+interface IAddToAvatar {
+  userId: string;
+  filename: string;
+}
+
+// eslint-disable-next-line
+interface IDropFromAvatar extends IAddToAvatar {}
 
 export class UserRepository extends BaseUserRepository {
   async updateOne(input: IUpdateOne) {
@@ -27,7 +36,25 @@ export class UserRepository extends BaseUserRepository {
       .execute();
   }
 
-  async getOne(userId: string) {
-    return this.user.findOneBy({ id: userId });
+  async addToAvatar(input: IAddToAvatar) {
+    return await this.user
+      .createQueryBuilder()
+      .update()
+      .set({
+        avatars: () => `'{${input.filename}}' || avatars`,
+      })
+      .where('id = :userId', { userId: input.userId })
+      .execute();
+  }
+
+  async dropFromAvatar(input: IDropFromAvatar) {
+    return await this.user
+      .createQueryBuilder()
+      .update()
+      .set({
+        avatars: () => `array_remove(avatars, '${input.filename}')`,
+      })
+      .where('id = :userId', { userId: input.userId })
+      .execute();
   }
 }
