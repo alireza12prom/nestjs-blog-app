@@ -4,6 +4,6 @@ export class RegisterDto {
   @IsEmail()
   email: string;
 
-  @Length(5, 15)
+  @Length(+process.env.MIN_PASSWORD_LENGTH)
   password: string;
 }
