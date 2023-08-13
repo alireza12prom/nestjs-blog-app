@@ -34,7 +34,7 @@ export class AuthService {
 
   async login(ip: string, platform: Platform, input: RegisterDto) {
     // check client has craeted account
-    const account = await this.userRepo.findByEmail(input.email);
+    const account = await this.userRepo.findByEmail(input.email, true);
     if (!account) {
       throw new BadRequestException("you haven't any account with this email");
     }
