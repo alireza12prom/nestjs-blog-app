@@ -1,11 +1,11 @@
-import { DataSourceOptions, DataSource } from 'typeorm';
 import path from 'path';
+import { DataSourceOptions, DataSource } from 'typeorm';
 
 export const Config: DataSourceOptions = {
   type: 'postgres',
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
-  port: 5432,
+  port: +process.env.DB_PORT,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   migrationsTableName: 'migration',
