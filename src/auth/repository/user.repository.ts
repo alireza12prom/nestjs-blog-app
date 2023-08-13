@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { BaseUserRepository } from '../../common/repository';
 
-interface Create {
+interface ICreate {
   email: string;
   password: string;
 }
 
 @Injectable()
 export class UserRepository extends BaseUserRepository {
-  async create(input: Create) {
+  async create(input: ICreate) {
     const newUser = this.user.create({ ...input });
     return await this.user.save(newUser);
   }

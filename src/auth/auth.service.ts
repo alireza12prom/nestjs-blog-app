@@ -5,7 +5,7 @@ import { ClientTypes } from '../common/constant';
 import { SessionRepository, UserRepository } from './repository';
 import { Injectable, BadRequestException } from '@nestjs/common';
 
-interface Platform {
+interface IPlatform {
   name?: string;
   description?: string;
 }
@@ -32,7 +32,7 @@ export class AuthService {
     await this.userRepo.create({ email: input.email, password: hash });
   }
 
-  async login(ip: string, platform: Platform, input: RegisterDto) {
+  async login(ip: string, platform: IPlatform, input: RegisterDto) {
     // check client has craeted account
     const account = await this.userRepo.findByEmail(input.email, true);
     if (!account) {
@@ -56,8 +56,8 @@ export class AuthService {
     const newSession = await this.sessionRepo.create({
       userId: account.id,
       ip,
-      platform_desc: platform.description,
-      platform_name: platform.name,
+      platformDesc: platform.description,
+      platformName: platform.name,
     });
 
     // generate a jwt

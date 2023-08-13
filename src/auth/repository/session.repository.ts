@@ -3,10 +3,10 @@ import { Injectable, Inject } from '@nestjs/common';
 import { SessionEntity } from 'src/db/entities';
 import { Entity } from '../../common/constant';
 
-interface Create {
+interface ICreate {
   userId: string;
-  platform_name?: string;
-  platform_desc?: string;
+  platformName?: string;
+  platformDesc?: string;
   ip?: string;
 }
 
@@ -14,13 +14,13 @@ interface Create {
 export class SessionRepository {
   constructor(@Inject(Entity.Session) private session: Repository<SessionEntity>) {}
 
-  async create(input: Create) {
+  async create(input: ICreate) {
     const newSession = this.session.create({
       userId: input.userId,
       ip: input.ip,
       platfrom: {
-        platform_name: input.platform_name,
-        platform_desc: input.platform_desc,
+        platform_name: input.platformName,
+        platform_desc: input.platformDesc,
       },
     });
     return await this.session.save(newSession);
