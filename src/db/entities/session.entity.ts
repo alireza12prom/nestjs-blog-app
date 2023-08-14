@@ -30,14 +30,14 @@ export class SessionEntity {
   @Column({ type: 'varchar', nullable: true })
   ip?: string;
 
-  @CreateDateColumn({ type: 'time with time zone' })
+  @CreateDateColumn({})
   createdAt: Date;
 
   @Column({
-    type: 'timestamp with time zone',
+    type: 'timestamp',
     nullable: false,
     generatedType: 'STORED',
-    asExpression: `"createdAt" + INTERVAL '${process.env.SESSION_EXPIRE_AFTER_DAYS} DAYS'`,
+    asExpression: `("createdAt" + INTERVAL '${process.env.SESSION_EXPIRE_AFTER_DAYS} DAYS')`,
   })
   expireAt: Date;
 
