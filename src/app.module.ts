@@ -4,6 +4,7 @@ import { DbModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ProfileModule } from './profile/profile.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ProfileModule } from './profile/profile.module';
     AuthModule,
     JwtModule.register({ global: true }),
     ProfileModule,
+    BlogModule,
   ],
 })
 export class AppModule {}

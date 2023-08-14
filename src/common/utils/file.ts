@@ -12,4 +12,8 @@ export class Filesystem {
   static openReadStream(path: string) {
     return fs.createReadStream(path);
   }
+
+  static rename(from: string, to: string) {
+    return fs.renameSync(from, to);
+  }
 }
