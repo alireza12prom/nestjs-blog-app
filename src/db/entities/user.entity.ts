@@ -1,3 +1,4 @@
+import { SessionEntity, BlogEntity } from '.';
 import {
   Entity,
   Column,
@@ -5,7 +6,6 @@ import {
   CreateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { SessionEntity } from './session.entity';
 
 class Name {
   @Column({ type: 'varchar', nullable: true })
@@ -44,4 +44,7 @@ export class UserEntity {
   // --- relations
   @OneToMany(() => SessionEntity, (session) => session.user)
   sessions: SessionEntity[];
+
+  @OneToMany(() => BlogEntity, (blog) => blog.publisher)
+  blogs: BlogEntity[];
 }

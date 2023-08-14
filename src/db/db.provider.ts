@@ -1,8 +1,8 @@
-import { Provider } from '@nestjs/common';
-import { connectionSource } from './connection';
-import { SessionEntity, UserEntity } from './entities';
 import { DataSource } from 'typeorm';
+import { Provider } from '@nestjs/common';
 import { Entity } from '../common/constant';
+import { connectionSource } from './connection';
+import { BlogEntity, SessionEntity, UserEntity } from './entities';
 
 export const DatabaseProvider: Provider[] = [
   {
@@ -22,6 +22,13 @@ export const DatabaseProvider: Provider[] = [
     provide: Entity.Session,
     useFactory: (datasource: DataSource) => {
       return datasource.getRepository(SessionEntity);
+    },
+    inject: [Entity.DATA_SOURCE],
+  },
+  {
+    provide: Entity.Blogs,
+    useFactory: (datasource: DataSource) => {
+      return datasource.getRepository(BlogEntity);
     },
     inject: [Entity.DATA_SOURCE],
   },
