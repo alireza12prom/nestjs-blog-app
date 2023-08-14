@@ -1,7 +1,9 @@
 import platform from 'platform';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
-import { Body, Controller, Post, Headers, Ip } from '@nestjs/common';
+import { CookieTypes } from '../common/constant';
+import { Body, Controller, Post, Headers, Ip, Res } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
@@ -18,9 +20,21 @@ export class AuthController {
     @Headers('user-agent') userAgent: string,
     @Ip() ip: string,
     @Body() body: LoginDto,
+    @Res() res: Response,
   ) {
     const { description, name } = platform.parse(userAgent);
     const token = await this.authService.login(ip, { name, description }, body);
-    return { status: 'success', value: token };
+
+    // set cookie
+    this.setCookie(res, CookieTypes.AuthorizationCookie, token);
+  }
+
+  private async setCookie(res: Response, key: string, value: any) {
+    res
+      .cookie(key, value, {
+        httpOnly: true,
+        sameSite: 'strict',
+      })
+      .send({ status: 'success' });
   }
 }

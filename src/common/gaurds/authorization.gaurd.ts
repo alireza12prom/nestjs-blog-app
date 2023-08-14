@@ -1,7 +1,7 @@
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { Entity } from '../constant';
+import { CookieTypes, Entity } from '../constant';
 import { Repository } from 'typeorm';
 import { SessionEntity } from 'src/db/entities';
 
@@ -30,8 +30,7 @@ export class AuthorizationGaurd implements CanActivate {
     const verifyedRoles = this.reflector.get<[]>('roles', context.getHandler());
 
     // retrive token form header
-    const bearerToken = req.headers.authorization || '';
-    const token = bearerToken.split(' ')[1];
+    const token = req.cookies[CookieTypes.AuthorizationCookie] || '';
 
     try {
       // decode token
