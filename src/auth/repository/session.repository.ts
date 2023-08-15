@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
-import { Injectable, Inject } from '@nestjs/common';
-import { SessionEntity } from 'src/db/entities';
 import { Entity } from '../../common/constant';
+import { UserSessionEntity } from 'src/db/entities';
+import { Injectable, Inject } from '@nestjs/common';
 
 interface ICreate {
   userId: string;
@@ -12,7 +12,9 @@ interface ICreate {
 
 @Injectable()
 export class SessionRepository {
-  constructor(@Inject(Entity.Session) private session: Repository<SessionEntity>) {}
+  constructor(
+    @Inject(Entity.UserSession) private session: Repository<UserSessionEntity>,
+  ) {}
 
   async create(input: ICreate) {
     const newSession = this.session.create({

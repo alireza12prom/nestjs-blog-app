@@ -1,4 +1,4 @@
-import { UserSessionEntity, BlogEntity } from '.';
+import { AdminSessionEntity } from '.';
 
 import {
   Entity,
@@ -14,27 +14,18 @@ class Name {
 
   @Column({ type: 'varchar', nullable: true })
   lname: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  nickname: string;
 }
 
-@Entity({ name: 'users' })
-export class UserEntity {
+@Entity({ name: 'admins' })
+export class AdminEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column(() => Name)
   name: Name;
 
-  @Column({ type: 'simple-array', array: true, nullable: false, default: [] })
-  avatars: string[];
-
-  @Column({ type: 'text', nullable: true })
-  bio: string;
-
   @Column({ type: 'varchar', nullable: false, unique: true })
-  email: string;
+  username: string;
 
   @Column({ type: 'varchar', nullable: false, select: false })
   password: string;
@@ -43,9 +34,6 @@ export class UserEntity {
   createdAt: Date;
 
   // --- relations
-  @OneToMany(() => UserSessionEntity, (session) => session.user)
-  sessions: UserSessionEntity[];
-
-  @OneToMany(() => BlogEntity, (blog) => blog.publisher)
-  blogs: BlogEntity[];
+  @OneToMany(() => AdminSessionEntity, (session) => session.user)
+  sessions: AdminSessionEntity[];
 }

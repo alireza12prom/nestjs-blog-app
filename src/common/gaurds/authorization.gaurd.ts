@@ -1,9 +1,9 @@
-import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { Repository } from 'typeorm';
+import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { CookieTypes, Entity } from '../constant';
-import { Repository } from 'typeorm';
-import { SessionEntity } from 'src/db/entities';
+import { ActiveSessionsView } from 'src/db/entities';
 
 import {
   CanActivate,
@@ -22,7 +22,8 @@ export class AuthorizationGaurd implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
-    @Inject(Entity.Session) private session: Repository<SessionEntity>,
+    @Inject(Entity.ActiveSessionsView)
+    private activeSession: Repository<ActiveSessionsView>,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -64,11 +65,7 @@ export class AuthorizationGaurd implements CanActivate {
   }
 
   private async isSessionActive(sessionId: string) {
-    return await this.session
-      .createQueryBuilder()
-      .where('id =  :sessionId', { sessionId })
-      .andWhere('CURRENT_TIMESTAMP <= "expireAt"')
-      .getOne();
+    return await this.activeSession.findOne({ where: { id: sessionId } });
   }
 
   private verifyRole(userRole: string, verifyedRoles: string[]) {
