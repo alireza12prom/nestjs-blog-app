@@ -1,4 +1,4 @@
-import { UserEntity } from '.';
+import { CommentEntity, UserEntity } from '.';
 
 import {
   Entity,
@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'blogs' })
@@ -35,4 +36,7 @@ export class BlogEntity {
   // --- relations
   @ManyToOne(() => UserEntity, (user) => user.blogs, { cascade: true })
   publisher: UserEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.blog, { cascade: true })
+  comments: CommentEntity[];
 }

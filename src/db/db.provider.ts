@@ -8,6 +8,7 @@ import {
   AdminEntity,
   AdminSessionEntity,
   BlogEntity,
+  CommentEntity,
   UserEntity,
   UserSessionEntity,
 } from './entities';
@@ -58,6 +59,13 @@ export const DatabaseProvider: Provider[] = [
     provide: Entity.Admin,
     useFactory: (datasource: DataSource) => {
       return datasource.getRepository(AdminEntity);
+    },
+    inject: [Entity.DATA_SOURCE],
+  },
+  {
+    provide: Entity.Comment,
+    useFactory: (datasource: DataSource) => {
+      return datasource.getRepository(CommentEntity);
     },
     inject: [Entity.DATA_SOURCE],
   },

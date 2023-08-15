@@ -5,3 +5,4 @@ export const AdminSession = 'adminSession';
 export const Blogs = 'blogs';
 export const ActiveSessionsView = 'activeSessionsView';
 export const Admin = 'admin';
+export const Comment = 'comment';
