@@ -20,7 +20,7 @@ export class CommentEntity {
   @Column({ type: 'uuid', nullable: false })
   blogId: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'text', nullable: false })
   body: string;
 
   @CreateDateColumn()
