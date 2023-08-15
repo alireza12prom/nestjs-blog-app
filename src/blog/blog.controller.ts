@@ -2,8 +2,8 @@ import { Role } from '../common/gaurds';
 import { BlogService } from './blog.service';
 import { DeleteUploadedFile } from './interceptor';
 import { ClientTypes, UploadDirs } from '../common/constant';
-import { CurrentClient, FileUpload } from '../common/decorators';
 import { GetBlogsDto, PublishBlogDto, UpdateBlogDto } from './dto';
+import { CurrentClient, FileUpload, WhoRequested } from '../common/decorators';
 
 import {
   Controller,
@@ -54,12 +54,17 @@ export class BlogController {
   }
 
   @Delete(':blogId')
-  @Role(ClientTypes.USER)
+  @Role(ClientTypes.USER, ClientTypes.ADMIN)
   async deleteBlog(
     @CurrentClient() clientId: string,
     @Param('blogId') blogId: string,
+    @WhoRequested() who: string,
   ) {
-    await this.blogService.deleteBlog(clientId, blogId);
+    if (who == ClientTypes.ADMIN) {
+      await this.blogService.deleteBlog(blogId);
+    } else {
+      await this.blogService.deleteBlog(blogId, clientId);
+    }
     return { status: 'success' };
   }
 
@@ -68,13 +73,19 @@ export class BlogController {
   @UseInterceptors(
     FileUpload('thumbnail', UploadDirs.BlogThumbnail, ['jpg', 'png', 'jpeg']),
   )
-  @Role(ClientTypes.USER)
+  @Role(ClientTypes.USER, ClientTypes.ADMIN)
   async updateBlog(
     @CurrentClient() clientId: string,
+    @WhoRequested() who: string,
     @Body() body: UpdateBlogDto,
     @UploadedFile() file,
   ) {
-    const result = await this.blogService.updateBlog(clientId, body, file?.filename);
+    let result;
+    if (who == ClientTypes.ADMIN) {
+      result = await this.blogService.updateBlog(body, file?.filename);
+    } else {
+      result = await this.blogService.updateBlog(body, file?.filename, clientId);
+    }
     return { status: 'success', value: result };
   }
 }

@@ -17,8 +17,8 @@ interface ICreate {
 }
 
 interface IDeleteOne {
-  publisherId: string;
   blogId: string;
+  publisherId?: string;
 }
 
 interface IUpdateOne extends IDeleteOne {
@@ -66,20 +66,27 @@ export class BlogRepository {
   }
 
   async deleteOne(input: IDeleteOne) {
+    const where = { blogId: input.blogId } as any;
+    if (input.publisherId) where.publisherId = input.publisherId;
+
     return (
       await this.blog
         .createQueryBuilder()
         .delete()
-        .where('id = :blogId AND "publisherId" = :publisherId', {
-          blogId: input.blogId,
-          publisherId: input.publisherId,
-        })
+        .where(
+          'id = :blogId' +
+            (input.publisherId ? ' AND "publisherId" = :publisherId' : ''),
+          where,
+        )
         .returning('*')
         .execute()
     ).raw[0];
   }
 
   async updateOne(input: IUpdateOne) {
+    const where = { blogId: input.blogId } as any;
+    if (input.publisherId) where.publisherId = input.publisherId;
+
     return (
       await this.blog
         .createQueryBuilder()
@@ -87,12 +94,12 @@ export class BlogRepository {
         .set({
           title: input.title || undefined,
           content: input.content || undefined,
-          thumbnail: input.thumbnail || undefined,
         })
-        .where('id = :blogId AND "publisherId" = :publisherId', {
-          blogId: input.blogId,
-          publisherId: input.publisherId,
-        })
+        .where(
+          'id = :blogId' +
+            (input.publisherId ? ' AND "publisherId" = :publisherId' : ''),
+          where,
+        )
         .returning('*')
         .execute()
     ).raw[0];

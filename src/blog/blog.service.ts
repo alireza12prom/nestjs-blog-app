@@ -23,7 +23,7 @@ export class BlogService {
     return await this.blogRepo.create({ publisherId, ...input, thumbnail });
   }
 
-  async deleteBlog(publisherId: string, blogId: string) {
+  async deleteBlog(blogId: string, publisherId?: string) {
     // delete blog from db
     const deletedBlog = await this.blogRepo.deleteOne({ publisherId, blogId });
     if (!deletedBlog) throw new NotFoundException("blog didn't find");
@@ -39,7 +39,7 @@ export class BlogService {
     }
   }
 
-  async updateBlog(publisherId: string, input: UpdateBlogDto, thumbnail?: string) {
+  async updateBlog(input: UpdateBlogDto, thumbnail?: string, publisherId?: string) {
     const updatedBlog = await this.blogRepo.updateOne({
       publisherId,
       ...input,
