@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+
+    networks:
+      - blog-app
+
+    volumes:
+      - blog-app:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    depends_on:
+      - db
+
+    ports:
+      - 3000:3000
+
+    networks:
+      - blog-app
+
+volumes:
+  blog-app:
+
+networks:
+  blog-app:
