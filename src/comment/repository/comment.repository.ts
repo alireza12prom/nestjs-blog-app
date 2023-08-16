@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { Entity } from '../../common/constant';
-import { CommentEntity } from 'src/db/entities';
+import { CommentEntity } from '../../db/entities';
 import { Inject, Injectable } from '@nestjs/common';
 
 interface IGetAll {

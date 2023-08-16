@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { CookieTypes, Entity } from '../constant';
-import { ActiveSessionsView } from 'src/db/entities';
+import { ActiveSessionsView } from '../../db/entities';
 
 import {
   CanActivate,

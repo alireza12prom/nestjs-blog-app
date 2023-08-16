@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { Entity } from '../../../common/constant';
 import { Injectable, Inject } from '@nestjs/common';
-import { AdminSessionEntity } from 'src/db/entities';
+import { AdminSessionEntity } from '../../../db/entities';
 
 interface ICreate {
   userId: string;
