@@ -3,6 +3,7 @@ import { ClientTypes } from '../common/constant';
 import { CommentService } from './comment.service';
 import { CurrentClient, WhoRequested } from '../common/decorators';
 import { UpdateCommentDto, CreateCommentDto, GetCommentsDto } from './dto';
+import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger';
 
 import {
   Controller,
@@ -16,10 +17,12 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 
+@ApiTags('Comment')
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @ApiOperation({ summary: 'get comments of a blog. [Public]' })
   @Get(':blogId')
   async getComments(
     @Param('blogId', ParseUUIDPipe) blogId: string,
@@ -29,6 +32,8 @@ export class CommentController {
     return { status: 'success', value: result };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'leave a comment. [User]' })
   @Post()
   @Role(ClientTypes.USER)
   async sendComment(
@@ -39,6 +44,8 @@ export class CommentController {
     return { status: 'success', value: result };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'edit a comment. [User, Admin]' })
   @Patch()
   @Role(ClientTypes.USER, ClientTypes.ADMIN)
   async editComment(
@@ -55,6 +62,8 @@ export class CommentController {
     return { status: 'success', value: result };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'delete a comment. [User, Admin]' })
   @Delete(':commentId')
   @Role(ClientTypes.USER, ClientTypes.ADMIN)
   async deleteComment(

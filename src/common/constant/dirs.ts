@@ -1,4 +1,4 @@
 export enum UploadDirs {
-  Avatar = 'avatars',
+  Avatar = 'avatar',
   BlogThumbnail = 'blog_thumbnail',
 }

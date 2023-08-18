@@ -3,6 +3,7 @@ import { BlogService } from './blog.service';
 import { DeleteUploadedFile } from './interceptor';
 import { ClientTypes, UploadDirs } from '../common/constant';
 import { GetBlogsDto, PublishBlogDto, UpdateBlogDto } from './dto';
+import { ApiTags, ApiOperation, ApiConsumes, ApiCookieAuth } from '@nestjs/swagger';
 import { CurrentClient, FileUpload, WhoRequested } from '../common/decorators';
 
 import {
@@ -16,24 +17,31 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 
+@ApiTags('Blog')
 @Controller('blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
+  @ApiOperation({ summary: 'get all blogs. [Public]' })
   @Get()
   async getBlogs(@Query() query: GetBlogsDto) {
     const result = await this.blogService.getBlogs(query);
     return { status: 'success', value: result };
   }
 
+  @ApiOperation({ summary: 'get one blog. [Public]' })
   @Get(':blogId')
-  async getOneBlog(@Param('blogId') blogId: string) {
+  async getOneBlog(@Param('blogId', ParseUUIDPipe) blogId: string) {
     const result = await this.blogService.getOneBlog(blogId);
     return { status: 'success', value: result };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'publish a blog. [User]' })
+  @ApiConsumes('multipart/form-data')
   @Post()
   @UseInterceptors(DeleteUploadedFile)
   @UseInterceptors(
@@ -53,11 +61,13 @@ export class BlogController {
     return { status: 'success', value: result };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'delete a blog. [User, Admin]' })
   @Delete(':blogId')
   @Role(ClientTypes.USER, ClientTypes.ADMIN)
   async deleteBlog(
     @CurrentClient() clientId: string,
-    @Param('blogId') blogId: string,
+    @Param('blogId', ParseUUIDPipe) blogId: string,
     @WhoRequested() who: string,
   ) {
     if (who == ClientTypes.ADMIN) {
@@ -68,6 +78,9 @@ export class BlogController {
     return { status: 'success' };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'update a blog. [User, Admin]' })
+  @ApiConsumes('multipart/form-data')
   @Patch()
   @UseInterceptors(DeleteUploadedFile)
   @UseInterceptors(

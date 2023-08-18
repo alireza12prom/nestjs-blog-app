@@ -1,8 +1,10 @@
 import { Role } from '../common/gaurds';
 import { ProfileService } from './profile.service';
+import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger';
 import { UpdateProfileDto, ChangePasswordDto } from './dto';
 import { ClientTypes, UploadDirs } from '../common/constant';
-import { CurrentClient, FileUpload } from '../common/decorators';
+import { CurrentClient, FileUpload, SwaggerFileUplaod } from '../common/decorators';
+
 import {
   Controller,
   Get,
@@ -15,10 +17,13 @@ import {
   UploadedFile,
   StreamableFile,
 } from '@nestjs/common';
+
+@ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
+  @ApiOperation({ summary: 'get profile. [User]' })
   @Get()
   @Role(ClientTypes.USER)
   async getProfile(@CurrentClient() client) {
@@ -26,6 +31,8 @@ export class ProfileController {
     return { status: 'success', value: profile };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'update profile. [User]' })
   @Patch()
   @Role(ClientTypes.USER)
   async updateProfile(@CurrentClient() client, @Body() body: UpdateProfileDto) {
@@ -33,6 +40,8 @@ export class ProfileController {
     return { status: 'success' };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'chage password. [User]' })
   @Patch('password')
   @Role(ClientTypes.USER)
   async changePassword(@CurrentClient() client, @Body() body: ChangePasswordDto) {
@@ -40,6 +49,9 @@ export class ProfileController {
     return { status: 'success' };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'upload a new avatar. [User]' })
+  @SwaggerFileUplaod('image', true)
   @Post('avatar')
   @Role(ClientTypes.USER)
   @UseInterceptors(FileUpload('image', UploadDirs.Avatar, ['png', 'jpeg']))
@@ -48,6 +60,8 @@ export class ProfileController {
     return { status: 'success' };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'delete an avatar. [User]' })
   @Delete('avatar/:filename')
   @Role(ClientTypes.USER)
   async deleteAvatar(@CurrentClient() client, @Param('filename') filename: string) {
@@ -55,6 +69,8 @@ export class ProfileController {
     return { status: 'success' };
   }
 
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'get an avatar. [User]' })
   @Get('avatar/:filename')
   async downloadAvatar(@Param('filename') filename: string) {
     const avatar = await this.profileService.downloadAvatar(filename);
