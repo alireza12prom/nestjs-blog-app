@@ -22,6 +22,13 @@ services:
     depends_on:
       - db
 
+    environment:
+      - DB_PORT=5432
+      - DB_PASS=1234
+      - DB_USER=postgres
+      - DB_NAME=postgres
+      - DB_HOST=db
+
     ports:
       - 3000:3000
 
