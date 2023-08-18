@@ -1,7 +1,9 @@
 #########################
-# Development Stage
+# Build Stage
 #########################
-FROM node:18-alpine as development
+FROM node:18-alpine as build
+
+RUN npm install -g npm@9.8.1 node-gyp@9.4.0
 
 WORKDIR /app
 
@@ -19,14 +21,14 @@ RUN npm run build
 #########################
 FROM node:18-alpine as production
 
+# Copy /app directory from build stage
+COPY --from=build /app /app
+
+# Copy env from local
+COPY .env-cmdrc.json /app
+
+# Chagne working directory
 WORKDIR /app
-
-COPY package*.json ./
-COPY .env-cmdrc.json ./
-
-# Copy installed packages and build directory from development stage
-COPY --from=development ./app/dist/ ./dist/
-COPY --from=development ./app/node_modules/ ./node_modules/
 
 # Start application
 CMD npm run docker:env -- node ./dist/main.js
