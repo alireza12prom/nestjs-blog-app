@@ -10,6 +10,8 @@ async function bootstrap() {
 
   app.use(cookieparser());
 
+  app.setGlobalPrefix('api/v1');
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
