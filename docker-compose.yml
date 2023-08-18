@@ -32,8 +32,12 @@ services:
       sh -c "npm run docker:env -- npm run schema:sync &&
              npm run docker:env -- node ./dist/main.js"
 
+    volumes:
+      - blog-uploads:/app/uploads
+
 volumes:
   blog-app:
+  blog-uploads:
 
 networks:
   blog-app:
