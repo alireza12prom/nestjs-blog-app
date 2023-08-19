@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '../auth.service';
 import { AdminRepository, SessionRepository } from '../repository';

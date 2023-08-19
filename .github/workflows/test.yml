@@ -1,0 +1,39 @@
+name: 'Test & Linting'
+run-name: 'running tests & linter for commit ${{github.sha}}'
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  run-test:
+    cancel-timeout-minutes: 1
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [20.x]
+
+    runs-on: ${{matrix.os }}
+    environment: test-env
+
+    steps:
+      - name: 'Checkouting'
+        uses: actions/checkout@v3
+
+      - name: 'Using nodejs ${{matrix.node}} on plt ${{runner.os}} with arch ${{runner.arch}}'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 'Installing dependencies'
+        run: npm ci
+
+      - name: 'Running linter'
+        run: npm run lint
+
+      - name: 'Running Unit tests'
+        run: npm run test

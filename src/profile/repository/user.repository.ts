@@ -1,5 +1,4 @@
 import { BaseUserRepository } from '../../common/repository';
-import { ArrayOverlap } from 'typeorm';
 
 interface IUpdateOne {
   userId: string;
