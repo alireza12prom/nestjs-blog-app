@@ -8,12 +8,12 @@ export class GetCommentsDto {
   @IsOptional()
   @Transform(({ value }) => parseInt(value))
   @ApiProperty({ type: Number, required: true, minimum: 1 })
-  page: number;
+  page?: number;
 
   @Min(10)
   @IsNumber()
   @IsOptional()
   @Transform(({ value }) => parseInt(value))
   @ApiProperty({ type: Number, required: true, minimum: 10 })
-  limit: number;
+  limit?: number;
 }
