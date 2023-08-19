@@ -9,13 +9,13 @@ export class UpdateBlogDto {
   @IsOptional()
   @IsNotEmpty()
   @ApiPropertyOptional({ type: String })
-  title: string;
+  title?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @ApiPropertyOptional({ type: String })
-  content: string;
+  content?: string;
 
   @ApiPropertyOptional({ type: String, format: 'binary' })
-  thumbnail: any;
+  thumbnail?: any;
 }

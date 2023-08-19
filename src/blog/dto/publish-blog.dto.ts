@@ -12,5 +12,5 @@ export class PublishBlogDto {
   content: string;
 
   @ApiPropertyOptional({ type: String, format: 'binary' })
-  thumbnail: any;
+  thumbnail?: any;
 }
