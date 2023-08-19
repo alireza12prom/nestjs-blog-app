@@ -28,6 +28,13 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: 'Caching npm packes'
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{runner.os}}-${{hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-cache
+
       - name: 'Installing dependencies'
         run: npm ci
 
