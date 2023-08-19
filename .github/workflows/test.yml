@@ -18,7 +18,6 @@ jobs:
         node: [20.x]
 
     runs-on: ${{matrix.os }}
-    environment: test-env
 
     steps:
       - name: 'Checkouting'
@@ -37,3 +36,8 @@ jobs:
 
       - name: 'Running Unit tests'
         run: npx jest
+        env:
+          UPLOAD_DIR: 'uploads'
+          MAX_ACTIVE_SESSION: '3'
+          JWT_SECRET: 'secret'
+          MAX_ADMIN_ACTIVE_SESSION: '3'
