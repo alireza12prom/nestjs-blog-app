@@ -14,7 +14,7 @@ export class CommentService {
   }
 
   async sendComment(input: CreateCommentDto, clientId: string) {
-    const isBlogExists = this.blogRepo.exists(input.blogId);
+    const isBlogExists = await this.blogRepo.exists(input.blogId);
     if (!isBlogExists) throw new NotFoundException("blog didn't find");
     return await this.commentRepo.create({ ...input, userId: clientId });
   }
