@@ -11,7 +11,7 @@ export class ProfileService {
   constructor(private userRepo: UserRepository) {}
 
   async getProfile(userId: string) {
-    return await this.userRepo.findById(userId);
+    return await this.userRepo.findById(userId, false);
   }
 
   async changePassword(userId: string, input: ChangePasswordDto) {
